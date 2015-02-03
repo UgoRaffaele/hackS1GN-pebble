@@ -1,0 +1,19 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Ugo Raffaele Piemontese",
+    "longName": "hackS1GN",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "hackS1GN",
+    "uuid": "4b2814d2-39b3-4f04-bc0f-ecbeecaaaf18",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
