@@ -8,9 +8,13 @@ void draw_cell(GContext* ctx, GPoint center, bool filled) {
   if (filled) {
     graphics_context_set_fill_color(ctx, GColorWhite);
     graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 11, center.x + 18, center.y + 11), 0, GCornerNone);
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+    graphics_draw_line(ctx, GPoint(center.x - 19, center.y - 12), GPoint(center.x + 19, center.y - 12));
   } else {
     graphics_context_set_fill_color(ctx, GColorBlack);
     graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 11, center.x + 18, center.y + 11), 0, GCornerNone);
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+    graphics_draw_rect(ctx, GRect(center.x - 19, center.y - 12, center.x + 19, center.y + 12));
   }
 }
 
