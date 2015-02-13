@@ -11,8 +11,8 @@
     },
     "shortName": "hackS1GN",
     "uuid": "4b2814d2-39b3-4f04-bc0f-ecbeecaaaf18",
-    "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionCode": 2,
+    "versionLabel": "2.0",
     "watchapp": {
         "watchface": true
     }
