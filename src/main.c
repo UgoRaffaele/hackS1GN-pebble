@@ -7,64 +7,52 @@ void draw_cell(GContext* ctx, GPoint center, bool filled) {
   // Each "cell" represents a binary digit or 0 or 1.
   if (filled) {
     graphics_context_set_fill_color(ctx, GColorWhite);
-    graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 11, center.x + 18, center.y + 11), 0, GCornerNone);
-    graphics_context_set_stroke_color(ctx, GColorWhite);
-    graphics_draw_line(ctx, GPoint(center.x - 19, center.y - 12), GPoint(center.x + 19, center.y - 12));
+    graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 14, center.x + 18, center.y + 14), 0, GCornerNone);
+    graphics_context_set_stroke_color(ctx, GColorBlack);
+    graphics_draw_rect(ctx, GRect(center.x - 19, center.y - 15, center.x + 19, center.y + 15));
   } else {
     graphics_context_set_fill_color(ctx, GColorBlack);
-    graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 11, center.x + 18, center.y + 11), 0, GCornerNone);
+    graphics_fill_rect(ctx, GRect(center.x - 18, center.y - 14, center.x + 18, center.y + 14), 0, GCornerNone);
     graphics_context_set_stroke_color(ctx, GColorWhite);
-    graphics_draw_rect(ctx, GRect(center.x - 19, center.y - 12, center.x + 19, center.y + 12));
+    graphics_draw_rect(ctx, GRect(center.x - 19, center.y - 15, center.x + 19, center.y + 15));
   }
 }
 
 #define CELL_SIZE_WIDTH 36 
-#define CELL_SIZE_HEIGHT 21
+#define CELL_SIZE_HEIGHT 28
   
 #define CELLS_PER_ROW 4
-#define CELLS_PER_COLUMN 8
+#define CELLS_PER_COLUMN 6
   
 GPoint get_center_point_from_cell_location(unsigned short x, unsigned short y) {
-  // Cell location (0,0) is upper left, location (4, 8) is lower right.
+  // Cell location (0,0) is upper left, location (4, 6) is lower right.
   return GPoint(
     (CELL_SIZE_WIDTH/2) + (CELL_SIZE_WIDTH * x),
     (CELL_SIZE_HEIGHT/2) + (CELL_SIZE_HEIGHT * y)
   );
 }
 
-void draw_cell_row_for_digit(GContext* ctx, unsigned short digit, unsigned short cell_row) {
-  // Converts the supplied decimal digit into binary and draws a row of cells.
+void draw_cell_column_for_digit(GContext* ctx, unsigned short digit, unsigned short cell_column) {
+  // Converts the supplied decimal digit into binary and draws a column of cells.
   // '1' binary values are filled, '0' binary values are not filled.
-  int shifter = 0;
-  if ((cell_row & 1) != 0) {
-    shifter =+ CELLS_PER_ROW;
-  }
-  for (int cell_column_index = 0; cell_column_index < CELLS_PER_ROW; cell_column_index++) {
-    draw_cell(ctx, get_center_point_from_cell_location(cell_column_index, cell_row), (digit >> (cell_column_index + shifter)) & 0x1);
+  for (int cell_row_index = 0; cell_row_index < CELLS_PER_COLUMN; cell_row_index++) {
+    draw_cell(ctx, get_center_point_from_cell_location(cell_column, cell_row_index), (digit >> (cell_row_index)) & 0x1);
   }
 }
 
-// The cell row offsets for each digit
-#define HOURS_FIRST_DIGIT_ROW 0
-#define HOURS_SECOND_DIGIT_ROW 1
-#define MINUTES_FIRST_DIGIT_ROW 2
-#define MINUTES_SECOND_DIGIT_ROW 3
-#define DAY_FIRST_DIGIT_ROW 4
-#define DAY_SECOND_DIGIT_ROW 5
-#define MONTH_FIRST_DIGIT_ROW 6
-#define MONTH_SECOND_DIGIT_ROW 7
+// The cell column offset for each digit
+#define HOURS_DIGIT_COLUMN 0
+#define MINUTES_DIGIT_COLUMN 1
+#define DAY_DIGIT_COLUMN 2
+#define MONTH_DIGIT_COLUMN 3
 
 void display_layer_update_callback(Layer *me, GContext* ctx) {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
-  draw_cell_row_for_digit(ctx, t->tm_hour, HOURS_FIRST_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, t->tm_hour, HOURS_SECOND_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, t->tm_min, MINUTES_FIRST_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, t->tm_min, MINUTES_SECOND_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, t->tm_mday, DAY_FIRST_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, t->tm_mday, DAY_SECOND_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, (t->tm_mon + 1), MONTH_FIRST_DIGIT_ROW);
-  draw_cell_row_for_digit(ctx, (t->tm_mon + 1), MONTH_SECOND_DIGIT_ROW);
+  draw_cell_column_for_digit(ctx, t->tm_hour, HOURS_DIGIT_COLUMN);
+  draw_cell_column_for_digit(ctx, t->tm_min, MINUTES_DIGIT_COLUMN);
+  draw_cell_column_for_digit(ctx, t->tm_mday, DAY_DIGIT_COLUMN);
+  draw_cell_column_for_digit(ctx, (t->tm_mon + 1), MONTH_DIGIT_COLUMN);
 }
 
 void handle_minutes_tick(struct tm *tick_time, TimeUnits units_changed) {
